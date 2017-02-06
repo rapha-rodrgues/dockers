@@ -1,0 +1,34 @@
+db:
+  image: raphael0608/postgresql:v1.0b
+  container_name: db
+#  volumes:
+#    - ./data/db/etc/:/etc/postgresql/
+#    - ./data/db/log/:/var/log/postgresql/
+#    - ./data/db/lib/:/var/lib/postgresql/
+  environment:
+    - POSTGRES_PASS=delta05
+    - POSTGRES_NEWUSER=odoo
+    - NEWUSER_PASS=0d00
+  ports:
+    - '5432:5432'
+app:
+  container_name: app
+  image: raphael0608/delta-app:v1.3b
+  environment:
+    - PG_HOST=db
+    - PG_PORT=5432
+    - PG_USER=odoo
+    - PG_PASSWORD=0d00
+    - PORT=8069
+  expose:
+    - "8069"
+  links:
+    - db
+
+web:
+  container_name: web
+  image: raphael0608/nginx:v0.1b
+  ports:
+    - '80:80'
+  links:
+    - app
